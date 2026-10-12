@@ -8,9 +8,9 @@ import time
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from progress_hud.draw import paint
-from progress_hud.parse import family
-from progress_hud.styles import DEFAULT_STYLE, STYLES, rows
+from claude_progressbar.draw import paint
+from claude_progressbar.parse import family
+from claude_progressbar.styles import DEFAULT_STYLE, STYLES, rows
 
 TOUR = [
     ("rise", "braille cells that fill bottom-up over a dotted floor (the default)"),
@@ -101,7 +101,7 @@ def play(frames_for, seconds, fps):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Replay progress-hud on a simulated set of running commands.")
+    parser = argparse.ArgumentParser(description="Replay claude-progressbar on a simulated set of running commands.")
     parser.add_argument("--style", default=DEFAULT_STYLE, choices=list(STYLES))
     parser.add_argument("--tour", action="store_true", help="show every style in turn, with title and end cards")
     parser.add_argument("--cols", type=int, default=116)
@@ -117,11 +117,11 @@ def main():
         if not args.tour:
             play(lambda now: frame(args.style, sim(now), args.cols, args.rows, None), args.seconds, args.fps)
             return
-        title = [("progress-hud", "b c12"), ("", ""), ("progress bars for the commands Claude Code runs", ""), ("", ""), ("parsed from their output · estimated from past runs · animated when unknown", "dim")]
+        title = [("claude-progressbar", "b c12"), ("", ""), ("progress bars for the commands Claude Code runs", ""), ("", ""), ("parsed from their output · estimated from past runs · animated when unknown", "dim")]
         play(lambda now: card(title, args.cols), 3.0, args.fps)
         for name, text in TOUR:
             play(lambda now, name=name, text=text: frame(name, sim(now), args.cols, args.rows, (name, text)), 2.6, args.fps)
-        ending = [("progress-hud", "b c12"), ("", ""), ("a Claude Code plugin · Linux · Python 3.9+", "dim"), ("", ""), ("github.com/mvrozanti/progress-hud", "b")]
+        ending = [("claude-progressbar", "b c12"), ("", ""), ("a Claude Code plugin · Linux · Python 3.9+", "dim"), ("", ""), ("github.com/mvrozanti/claude-progressbar", "b")]
         play(lambda now: card(ending, args.cols), 3.5, args.fps)
     finally:
         sys.stdout.write("\x1b[?25h\n")

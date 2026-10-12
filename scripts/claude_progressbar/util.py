@@ -3,7 +3,7 @@ import os
 
 
 def state_dir(env, fallback):
-    path = os.path.join(os.environ.get(env) or fallback, "progress-hud")
+    path = os.path.join(os.environ.get(env) or fallback, "claude-progressbar")
     os.makedirs(path, exist_ok=True)
     return path
 

@@ -1,13 +1,13 @@
 {
-  "name": "progress-hud",
+  "name": "claude-progressbar",
   "description": "Statusline progress bars for the Bash commands Claude Code runs: parsed from their output, estimated from past runs of the same command, or animated when neither is known.",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "author": {
     "name": "mvrozanti",
     "url": "https://github.com/mvrozanti"
   },
-  "homepage": "https://github.com/mvrozanti/progress-hud",
-  "repository": "https://github.com/mvrozanti/progress-hud",
+  "homepage": "https://github.com/mvrozanti/claude-progressbar",
+  "repository": "https://github.com/mvrozanti/claude-progressbar",
   "license": "MIT",
   "keywords": ["statusline", "progress", "bash", "braille", "hud"]
 }

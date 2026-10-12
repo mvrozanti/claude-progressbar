@@ -1,16 +1,16 @@
 {
-  "name": "progress-hud",
+  "name": "claude-progressbar",
   "owner": {
     "name": "mvrozanti"
   },
   "metadata": {
-    "description": "progress-hud: statusline progress bars for the Bash commands Claude Code runs"
+    "description": "claude-progressbar: statusline progress bars for the Bash commands Claude Code runs"
   },
   "plugins": [
     {
-      "name": "progress-hud",
+      "name": "claude-progressbar",
       "description": "Statusline progress bars for the Bash commands Claude Code runs",
-      "version": "1.4.0",
+      "version": "2.0.0",
       "source": "./",
       "category": "productivity"
     }

@@ -77,7 +77,7 @@ def main():
         data = {}
     session = str(data.get("session_id") or "default")
     slug = hashlib.sha1(session.encode()).hexdigest()[:16]
-    runtime = state_dir("XDG_RUNTIME_DIR", f"/tmp/progress-hud-{os.getuid()}")
+    runtime = state_dir("XDG_RUNTIME_DIR", f"/tmp/claude-progressbar-{os.getuid()}")
     cols = columns()
     lines = []
     command = hud_command(wrap)

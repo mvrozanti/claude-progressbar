@@ -1,10 +1,10 @@
-# progress-hud
+# claude-progressbar
 
 Progress bars for the Bash commands Claude Code runs, drawn in its statusline.
 
-![progress-hud showing five running commands](media/rise.gif)
+![claude-progressbar showing five running commands](media/rise.gif)
 
-While Claude runs a long command, Claude Code shows a spinner and a timer. progress-hud adds one bar per running command, foreground or background, and fills it from the best source it has:
+While Claude runs a long command, Claude Code shows a spinner and a timer. claude-progressbar adds one bar per running command, foreground or background, and fills it from the best source it has:
 
 - **Parsed** from the command's own output: the newest `42%`, `n/m` or `n of m` it printed.
 - **Estimated** from earlier runs of the same command, when the output carries no progress. A run that outlasts its estimate is shown as overtime.
@@ -13,17 +13,17 @@ While Claude runs a long command, Claude Code shows a spinner and a timer. progr
 ## Install
 
 ```
-/plugin marketplace add mvrozanti/progress-hud
-/plugin install progress-hud@progress-hud
-/progress-hud:setup
+/plugin marketplace add mvrozanti/claude-progressbar
+/plugin install claude-progressbar@claude-progressbar
+/claude-progressbar:setup
 ```
 
-`/progress-hud:setup` points your `statusLine` at the plugin and keeps whatever you had there above the bars. To set it by hand, put this in `~/.claude/settings.json`:
+`/claude-progressbar:setup` points your `statusLine` at the plugin and keeps whatever you had there above the bars. To set it by hand, put this in `~/.claude/settings.json`:
 
 ```json
 "statusLine": {
   "type": "command",
-  "command": "sh -c 'exec python3 -S \"$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/*/progress-hud/*/ | sort -V | tail -1)scripts/statusline.py\" --wrap claude-hud'",
+  "command": "sh -c 'exec python3 -S \"$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/*/claude-progressbar/*/ | sort -V | tail -1)scripts/statusline.py\" --wrap claude-hud'",
   "refreshInterval": 1
 }
 ```
@@ -61,9 +61,9 @@ While Claude runs a long command, Claude Code shows a spinner and a timer. progr
 
 ## How it works
 
-Every command Claude runs is a shell started by the `claude` process, with its output going to a task file. On each refresh progress-hud lists that process's children in `/proc`, keeps the ones writing to a task file, and reads the tail of each file.
+Every command Claude runs is a shell started by the `claude` process, with its output going to a task file. On each refresh claude-progressbar lists that process's children in `/proc`, keeps the ones writing to a task file, and reads the tail of each file.
 
-When a command finishes, its duration is appended to `~/.local/state/progress-hud/history.jsonl`, keyed by the command with leading `cd …`, variable assignments and wrappers such as `sudo`, `timeout` and `rtk` stripped. The estimate is the median of the last seven runs. A command never seen before borrows from commands that start the same way, such as `nix build`, but only when those runs agree within a factor of three. In a chain such as `setup && main`, the last command decides which commands it borrows from.
+When a command finishes, its duration is appended to `~/.local/state/claude-progressbar/history.jsonl`, keyed by the command with leading `cd …`, variable assignments and wrappers such as `sudo`, `timeout` and `rtk` stripped. The estimate is the median of the last seven runs. A command never seen before borrows from commands that start the same way, such as `nix build`, but only when those runs agree within a factor of three. In a chain such as `setup && main`, the last command decides which commands it borrows from.
 
 The plugin also ships a skill. It tells Claude to keep progress visible on long commands: let output flow instead of piping it into `tail`, use flags such as `rsync --info=progress2`, and print `n/m` in its own loops.
 

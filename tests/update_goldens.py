@@ -9,7 +9,7 @@ sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
 
-from progress_hud.styles import STYLES, rows
+from claude_progressbar.styles import STYLES, rows
 
 
 def digest(lines):

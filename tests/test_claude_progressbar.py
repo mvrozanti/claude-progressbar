@@ -12,9 +12,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
 sys.path.insert(0, HERE)
 
-from progress_hud import cli, draw, history, model, parse, procs
-from progress_hud import styles
-from progress_hud.styles import blocks, braille, field
+from claude_progressbar import cli, draw, history, model, parse, procs
+from claude_progressbar import styles
+from claude_progressbar.styles import blocks, braille, field
 
 sl = types.SimpleNamespace(**{
     name: value
@@ -363,7 +363,7 @@ class Platform(unittest.TestCase):
             procs.os.path.isdir = real
 
     def test_claude_hud_runs_only_when_asked(self):
-        from progress_hud import hud
+        from claude_progressbar import hud
         self.assertIsNone(hud.hud_command(None))
         self.assertIsNone(hud.hud_command(""))
         self.assertEqual(hud.hud_command("echo hi"), "echo hi")
