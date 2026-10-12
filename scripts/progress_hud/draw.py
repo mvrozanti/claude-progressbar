@@ -123,6 +123,10 @@ def with_note(row, t, cols, quiet_style="c3", quiet_text=None, gap="  "):
     return row + [(gap, ""), (text, "dim")] if text and used + len(gap) + len(text) <= cols else row
 
 
+def estimate_tone(t):
+    return "dim" if t.get("stale") else "c12"
+
+
 def split_eighths(fraction, width):
     cells = clamp01(fraction) * width
     full = int(cells)

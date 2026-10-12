@@ -311,6 +311,37 @@ class Styles(unittest.TestCase):
         self.assertTrue(set(cells[4:]) <= {"⣀"}, cells)
 
 
+class Stale(unittest.TestCase):
+    PROBE = {
+        "key": "git rev-parse --show-toplevel && TAG=probe8 bash scripts/probe.sh",
+        "start": 1000.0, "mtime": 1001.0, "progress": None, "estimate": 2081.0, "samples": [2013.0, 2150.0],
+        "last": "/home/user/slither",
+    }
+
+    def test_a_silent_estimate_withdraws_its_percentage(self):
+        now = 1000.0 + 16 * 60 + 56
+        silence = {"countdown": "no output for 16m55s", "digits": "quiet 16:55"}
+        for style in sl.STYLES:
+            text = "\n".join(sl.ANSI.sub("", line) for line in sl.rows([dict(self.PROBE)], now, 160, [], style))
+            self.assertNotIn("~49%", text, style)
+            self.assertIn(silence.get(style, "quiet 16m55s"), text, style)
+
+    def test_rise_keeps_the_time_against_the_usual_run(self):
+        now = 1000.0 + 16 * 60 + 56
+        line = sl.ANSI.sub("", sl.rows([dict(self.PROBE)], now, 160, [], "rise")[0])
+        self.assertIn("      ?  16m56s/~34m41s", line)
+
+    def test_a_talking_estimate_keeps_its_percentage(self):
+        now = 1000.0 + 16 * 60 + 56
+        line = sl.ANSI.sub("", sl.rows([dict(self.PROBE, mtime=now - 2)], now, 160, [], "rise")[0])
+        self.assertIn("~49%", line)
+
+    def test_a_chain_takes_its_family_from_the_last_command(self):
+        self.assertEqual(sl.family(sl.normalize(self.PROBE["key"])), "bash scripts/probe.sh")
+        self.assertEqual(sl.family("make && make test"), "make test")
+        self.assertEqual(sl.family("for i in $(seq 1 3); do :; done"), "for i")
+
+
 class Goldens(unittest.TestCase):
     def test_every_style_matches_the_captured_bytes(self):
         from update_goldens import computed

@@ -131,7 +131,7 @@ def field_spec(t, width, ms, palette):
     to = clamp01(t["fraction"]) * width
     if mode == "estimate":
         pill = f"{clock(t['elapsed'])} / ~{clock(t['est'])}" if roomy else "~" + clock(t["est"] - t["elapsed"])
-        return {"to": to, "acc": palette["run"], "sparse": True, "marks": True, "pill": (pill, mix(palette["run"], track, 0.45)), "right": f"~{jround(t['fraction'] * 100)}%", "style": ""}
+        return {"to": to, "acc": palette["run"], "sparse": True, "marks": True, "pill": (pill, mix(palette["run"], track, 0.45)), "right": "?" if t.get("stale") else f"~{jround(t['fraction'] * 100)}%", "style": "dim" if t.get("stale") else ""}
     src = t.get("src") or ""
     pill = f"{t['ratio'][0]}/{t['ratio'][1]}" if t.get("ratio") else clock(t["elapsed"])
     return {"to": to, "acc": palette["run"], "marks": True, "pill": (pill, palette["run"]), "right": src if src.endswith("%") else f"{t['fraction'] * 100:.1f}%", "style": "b"}

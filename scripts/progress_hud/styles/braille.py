@@ -1,6 +1,6 @@
 import math
 
-from ..draw import bounce_pos, clamp01, clip, clock, jround, lpad, merge, pad, paint, spin, with_note
+from ..draw import estimate_tone, bounce_pos, clamp01, clip, clock, jround, lpad, merge, pad, paint, spin, with_note
 
 
 DOT = ((0x01, 0x02, 0x04, 0x40), (0x08, 0x10, 0x20, 0x80))
@@ -27,7 +27,7 @@ def dot_number(t):
         src = t.get("src") or ""
         return (src if src.endswith("%") else f"{t['fraction'] * 100:.1f}%"), "b"
     if t["mode"] == "estimate":
-        return f"~{jround(t['fraction'] * 100)}%", ""
+        return ("?", "dim") if t.get("stale") else (f"~{jround(t['fraction'] * 100)}%", "")
     if t["mode"] == "over":
         return f"+{jround((t['elapsed'] / t['est'] - 1) * 100)}%", "b c11"
     return "—", "dim"
@@ -64,7 +64,7 @@ def rise_gauge(t, now, w):
     for i in range(w):
         local = min(per, max(0, steps - i * per))
         if local:
-            cells.append((braille(lambda c, r, local=local: order(c, r) < local), "c12" if est else "b c12"))
+            cells.append((braille(lambda c, r, local=local: order(c, r) < local), estimate_tone(t) if est else "b c12"))
         else:
             cells.append((floor, "c8"))
     return merge(cells)
@@ -89,7 +89,7 @@ def matrix_gauge(t, now, w):
         if not local:
             break
         lit = braille(lambda c, r, local=local: rise_order(c, r) < local and (not est or (c + r) % 2 == 0))
-        cells[i] = (lit, "c12" if est else "b c12")
+        cells[i] = (lit, estimate_tone(t) if est else "b c12")
     return merge(cells)
 
 
@@ -101,7 +101,7 @@ def rail_gauge(t, now, w):
     if t["mode"] == "over":
         return [(FULL * w, "b c11")]
     est = t["mode"] == "estimate"
-    style = "c12" if est else "b c12"
+    style = estimate_tone(t) if est else "b c12"
     full, half = divmod(int(clamp01(t["fraction"]) * w * 2), 2)
     for i in range(full):
         cells[i] = (braille(lambda c, r: not est or r in (1, 2)), style)
@@ -151,6 +151,6 @@ def graph_gauge(t, now, w):
         elif mode == "over" and i * 2 / n * span >= t["est"]:
             style = "b c11"
         else:
-            style = "b c12" if mode == "parsed" else "c12"
+            style = "b c12" if mode == "parsed" else estimate_tone(t)
         cells.append((braille(lambda c, r, hs=hs: r == 3 if hs[c] < 0 else r >= 4 - hs[c]), style))
     return merge(cells)

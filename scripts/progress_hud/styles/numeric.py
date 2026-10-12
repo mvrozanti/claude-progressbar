@@ -1,6 +1,6 @@
 import math
 
-from ..draw import clamp01, clip, clock, hhmm, jround, lpad, merge, mss, pad, paint, spin, with_note
+from ..draw import estimate_tone, clamp01, clip, clock, hhmm, jround, lpad, merge, mss, pad, paint, spin, with_note
 from .braille import dot_number
 
 
@@ -11,7 +11,7 @@ def digits_rows(t, now, cols, style, palette):
     if mode in ("parsed", "estimate"):
         full, half = divmod(int(clamp01(t["fraction"]) * w * 2), 2)
         ch = "╍" if mode == "estimate" else "━"
-        bar = [(ch * full + ("╸" if half else ""), "c12" if mode == "estimate" else "b c12"), ("━" * (w - full - half), "c8")]
+        bar = [(ch * full + ("╸" if half else ""), estimate_tone(t) if mode == "estimate" else "b c12"), ("━" * (w - full - half), "c8")]
     elif mode == "over":
         bar = [("━" * w, "b c11")]
     else:
@@ -40,7 +40,7 @@ def segments_rows(t, now, cols, style, palette):
         elif mode == "over":
             cells.append(("■", "b c11"))
         elif i < lit:
-            cells.append(("▪", "c12") if mode == "estimate" else ("■", "b c12"))
+            cells.append(("▪", estimate_tone(t)) if mode == "estimate" else ("■", "b c12"))
         else:
             cells.append(("□", "c8"))
     if mode == "over":
@@ -51,7 +51,7 @@ def segments_rows(t, now, cols, style, palette):
     if mode == "parsed":
         pct = f"{jround(t['fraction'] * 100)}%"
     elif mode == "estimate":
-        pct, timing = f"~{jround(t['fraction'] * 100)}%", timing + "/~" + clock(t["est"])
+        pct, timing = "?" if t.get("stale") else f"~{jround(t['fraction'] * 100)}%", timing + "/~" + clock(t["est"])
     elif mode == "over":
         pct, timing = f"+{jround((t['elapsed'] / t['est'] - 1) * 100)}%", timing + "/~" + clock(t["est"])
     row = [(spin(now), "b c11" if mode == "over" else "c12"), (" " + pad(clip(t["key"], lw), lw) + " ", "")]
@@ -62,7 +62,7 @@ def segments_rows(t, now, cols, style, palette):
 def countdown_rows(t, now, cols, style, palette):
     lw, w, mode = style.label(cols), style.gauge(cols), t["mode"]
     remain = None
-    if mode == "estimate":
+    if mode == "estimate" and not t.get("stale"):
         remain = t["est"] - t["elapsed"]
     elif mode == "parsed" and t["fraction"] >= 0.03 and t["elapsed"] >= 5:
         remain = t["elapsed"] * (1 - t["fraction"]) / t["fraction"]
@@ -71,6 +71,8 @@ def countdown_rows(t, now, cols, style, palette):
         hero = ("≈" if mode == "parsed" else "~") + f"{clock(remain)} left · ends {hhmm(now + remain)}"
     elif mode == "parsed":
         hero = "measuring rate…"
+    elif t.get("stale"):
+        hero, hero_style = f"no output for {clock(t['quiet'])} · usually {clock(t['est'])}", ""
     elif mode == "over":
         hero, hero_style = f"overdue {clock(t['elapsed'] - t['est'])} · usually {clock(t['est'])}", "b c11"
     else:
@@ -82,7 +84,7 @@ def countdown_rows(t, now, cols, style, palette):
     else:
         keep = jround((1 - clamp01(t["fraction"])) * w)
         bar = [("─" * (w - keep), "c8"), ("━" * keep, "b c12")]
-    pct = f"{jround(t['fraction'] * 100)}%" if mode == "parsed" else f"~{jround(t['fraction'] * 100)}%" if mode == "estimate" else ""
+    pct = f"{jround(t['fraction'] * 100)}%" if mode == "parsed" else ("?" if t.get("stale") else f"~{jround(t['fraction'] * 100)}%") if mode == "estimate" else ""
     row = [(spin(now), "b c11" if "c11" in hero_style else "c12"), (" " + pad(clip(t["key"], lw), lw) + "  ", ""), (pad(hero, 32), hero_style), (" ", "")]
     row += bar + [(" " + lpad(pct, 4), "dim")]
     return [paint(with_note(row, t, cols, quiet_style="b c11"), cols)]

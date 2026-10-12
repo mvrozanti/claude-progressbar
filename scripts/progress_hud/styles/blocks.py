@@ -1,5 +1,5 @@
 from ..history import median
-from ..draw import EIGHTHS, QUIET_AFTER, bounce_pos, clamp01, clip, clock, jround, lpad, merge, pad, paint, span_width, spin, split_eighths, with_note
+from ..draw import estimate_tone, EIGHTHS, QUIET_AFTER, bounce_pos, clamp01, clip, clock, jround, lpad, merge, pad, paint, span_width, spin, split_eighths, with_note
 
 
 TONE = {"parsed": "c2", "estimate": "c6", "over": "c3", "unknown": "c5"}
@@ -22,7 +22,7 @@ def render(task, now, cols, style, palette=None):
         mode, fraction, percent, timing = "parsed", task["progress"], f"{task['progress'] * 100:3.0f}%", clock(elapsed)
     elif expected and elapsed <= expected:
         fraction = elapsed / expected
-        mode, percent, timing = "estimate", f"~{fraction * 100:.0f}%", f"{clock(elapsed)}/~{clock(expected)}"
+        mode, percent, timing = "estimate", "?" if task.get("stale") else f"~{fraction * 100:.0f}%", f"{clock(elapsed)}/~{clock(expected)}"
     elif expected:
         mode, fraction, percent, timing = "over", 1.0, "", f"{clock(elapsed)} +{clock(elapsed - expected)}"
     else:
@@ -46,7 +46,7 @@ def ruler_rows(t, now, cols, style, palette):
     lw, w, mode = style.label(cols), style.gauge(cols), t["mode"]
     ticks = {jround(q * w) - 1 for q in (0.25, 0.5, 0.75)}
     cells = [("┆" if i in ticks else "·", "dim") for i in range(w)]
-    fill = {"parsed": "b c12", "estimate": "c12", "over": "b c11", "unknown": "b c12"}[mode]
+    fill = {"parsed": "b c12", "estimate": estimate_tone(t), "over": "b c11", "unknown": "b c12"}[mode]
     cap = ("▏", "dim")
     if t["fraction"] is None:
         p = bounce_pos(w, now, 3)
@@ -64,7 +64,7 @@ def ruler_rows(t, now, cols, style, palette):
     if mode == "parsed":
         pct = f"{t['fraction'] * 100:.1f}%"
     elif mode == "estimate":
-        pct, timing = f"~{jround(t['fraction'] * 100)}%", f"{clock(t['elapsed'])} of ~{clock(t['est'])}"
+        pct, timing = "?" if t.get("stale") else f"~{jround(t['fraction'] * 100)}%", f"{clock(t['elapsed'])} of ~{clock(t['est'])}"
     elif mode == "over":
         pct, timing = f"+{jround((t['elapsed'] / t['est'] - 1) * 100)}%", f"{clock(t['elapsed'])} (~{clock(t['est'])})"
     row = [(spin(now), "b c11" if mode == "over" else "c12"), (" " + pad(clip(t["key"], lw), lw) + " ", ""), ("▕", "dim")]

@@ -1,5 +1,6 @@
 from .parse import parse_match
 from .history import estimate_samples
+from .draw import QUIET_AFTER
 
 
 MIN_ELAPSED = 1.5
@@ -34,7 +35,8 @@ def facts(task, now):
     else:
         mode, fraction = "unknown", None
     quiet = now - task.get("mtime", task["start"])
-    return {**task, "elapsed": elapsed, "mode": mode, "fraction": fraction, "est": expected, "quiet": quiet}
+    stale = mode == "estimate" and quiet >= QUIET_AFTER
+    return {**task, "elapsed": elapsed, "mode": mode, "fraction": fraction, "est": expected, "quiet": quiet, "stale": stale}
 
 
 def visible_tasks(tasks, now):

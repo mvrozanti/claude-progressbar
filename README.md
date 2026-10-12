@@ -63,7 +63,7 @@ While Claude runs a long command, Claude Code shows a spinner and a timer. progr
 
 Every command Claude runs is a shell started by the `claude` process, with its output going to a task file. On each refresh progress-hud lists that process's children in `/proc`, keeps the ones writing to a task file, and reads the tail of each file.
 
-When a command finishes, its duration is appended to `~/.local/state/progress-hud/history.jsonl`, keyed by the command with leading `cd …`, variable assignments and wrappers such as `sudo`, `timeout` and `rtk` stripped. The estimate is the median of the last seven runs. A command never seen before borrows from commands that start the same way, such as `nix build`, but only when those runs agree within a factor of three.
+When a command finishes, its duration is appended to `~/.local/state/progress-hud/history.jsonl`, keyed by the command with leading `cd …`, variable assignments and wrappers such as `sudo`, `timeout` and `rtk` stripped. The estimate is the median of the last seven runs. A command never seen before borrows from commands that start the same way, such as `nix build`, but only when those runs agree within a factor of three. In a chain such as `setup && main`, the last command decides which commands it borrows from.
 
 The plugin also ships a skill. It tells Claude to keep progress visible on long commands: let output flow instead of piping it into `tail`, use flags such as `rsync --info=progress2`, and print `n/m` in its own loops.
 
@@ -75,6 +75,7 @@ Each refresh is a Python process using about 20 ms of CPU, once a second, in eve
 
 - **Linux only.** macOS has no `/proc`. On macOS the statusline shows no bars, and nothing breaks.
 - **Labels depend on Claude Code's shell wrapper.** The command is read from the `eval '…'` inside the shell Claude Code starts. If that wrapper changes shape, a label shows the whole wrapper instead.
+- **An estimate cannot tell slow from stuck.** It only measures time against earlier runs. So once a command has printed nothing for 30 seconds, the percentage is replaced by `?` and the estimated fill dims, while the elapsed time against the usual duration stays.
 - **Parsing is greedy.** Any percentage or `n/m` in the newest output lines counts as progress, so a log line such as `CPU 100%` or a date such as `10/12` can be misread.
 - **`field` animates once a second.** The statusline refreshes at most once a second, so the twinkle steps instead of shimmering.
 

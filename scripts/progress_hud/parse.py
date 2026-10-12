@@ -20,7 +20,8 @@ CD_PREFIX = re.compile(r"cd\s+\S+\s*(?:&&|;)\s*")
 ASSIGNMENT = re.compile(r"[A-Za-z_][A-Za-z0-9_]*=\S*")
 
 
-SUBCOMMAND = re.compile(r"[a-z][\w:.-]*")
+SUBCOMMAND = re.compile(r"[a-z][\w:./-]*")
+CHAIN = re.compile(r"\s*(?:&&|\|\|)\s*")
 
 
 DURATION = re.compile(r"\d+(?:\.\d+)?[smhd]?")
@@ -59,7 +60,7 @@ def normalize(command):
 
 
 def family(key):
-    words = key.split(" ")
+    words = normalize(CHAIN.split(key)[-1]).split(" ")
     head = os.path.basename(words[0])
     if len(words) > 1 and SUBCOMMAND.fullmatch(words[1]):
         return f"{head} {words[1]}"
