@@ -1,0 +1,19 @@
+{
+  "nows": [1045.0, 1045.7, 1046.3, 1052.2],
+  "cols": [20, 40, 61, 80, 120, 200],
+  "tasks": {
+    "parsed-percent": {"key": "rsync -a --info=progress2 ~/Music/ /mnt/backup/music/", "family": "rsync", "start": 1000.0, "mtime": 1040.0, "progress": 0.38, "src": "38%", "ratio": null, "estimate": null, "samples": [], "last": "    412,048,117  38%   24.71MB/s    0:01:37"},
+    "parsed-ratio": {"key": "cargo build --release", "family": "cargo build", "start": 1000.0, "mtime": 1044.0, "progress": 0.3974358974358974, "src": "124/312", "ratio": [124, 312], "estimate": null, "samples": [], "last": "    Building [==========>    ] 124/312: tokio, serde_json"},
+    "parsed-history": {"key": "nix build .#toplevel", "family": "nix build", "start": 1000.0, "mtime": 1044.0, "progress": 0.62, "src": "62%", "ratio": null, "estimate": 80.0, "samples": [70.0, 80.0, 95.0], "last": "copying path 62%"},
+    "estimate": {"key": "nixos-rebuild switch --flake .#desktop", "family": "nixos-rebuild switch", "start": 950.0, "mtime": 1041.0, "progress": null, "src": null, "ratio": null, "estimate": 272.8, "samples": [236.6, 309.0], "last": "building '/nix/store/j2230ns5mjzl2p0s4zab4n23a6dlznz2-system-units.drv'..."},
+    "over": {"key": "bash cache/smoke.sh 2>&1 | grep -v '^warning'", "family": "bash", "start": 800.0, "mtime": 1039.0, "progress": null, "src": null, "ratio": null, "estimate": 209.6, "samples": [209.6], "last": "==> mixing trailer"},
+    "unknown-quiet": {"key": "fd -H -t f -g '*.kra' / --exclude /nix", "family": "fd", "start": 997.0, "mtime": 997.0, "progress": null, "src": null, "ratio": null, "estimate": null, "samples": [], "last": ""},
+    "graph-sizes": {"key": "pytest -q", "family": "pytest", "start": 1000.0, "mtime": 1044.0, "progress": null, "src": null, "ratio": null, "estimate": 90.0, "samples": [90.0], "last": "....F....", "sizes": [[1000.0, 0], [1010.0, 200], [1020.0, 200], [1030.0, 5000], [1040.0, 5600], [1045.0, 5600]]},
+    "done": {"key": "make -j24", "family": "make", "start": 900.0, "duration": 61.0, "done": true}
+  },
+  "palettes": {
+    "default": null,
+    "kitty": {"run": [131, 210, 227], "done": [155, 216, 168], "over": [230, 196, 106], "back": [0, 0, 0]}
+  },
+  "hidden": [{"key": "fd -H -t f -g '*.kra' / --exclude /nix", "family": "fd", "start": 1030.0, "estimate": null}, {"key": "nixos-rebuild switch --flake .#desktop", "family": "nixos-rebuild switch", "start": 1040.0, "estimate": 272.8}]
+}
