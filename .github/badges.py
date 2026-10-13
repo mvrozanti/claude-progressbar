@@ -40,8 +40,8 @@ def badge(label, message, ok, **logo):
         "label": label,
         "message": message,
         "color": "brightgreen" if ok else "red",
-        "logoColor": "white",
         "cacheSeconds": CACHE_SECONDS,
+        **({"logoColor": "white"} if "namedLogo" in logo else {}),
         **logo,
     }
 
