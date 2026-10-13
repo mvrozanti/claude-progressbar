@@ -10,7 +10,7 @@
     {
       "name": "progressbar",
       "description": "Statusline progress bars for the Bash commands Claude Code runs",
-      "version": "2.1.0",
+      "version": "3.0.0",
       "source": "./",
       "category": "productivity"
     }
