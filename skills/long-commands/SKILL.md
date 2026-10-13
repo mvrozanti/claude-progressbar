@@ -1,5 +1,5 @@
 ---
-name: claude-progressbar
+name: long-commands
 description: Use before running any Bash command that may take more than about ten seconds — builds, rebuilds, downloads, syncs, test suites, batch loops — and when writing a script or loop that will. The statusline draws one progress bar per running command from the tail of that command's own output (its newest `NN%`, `n/m` or `n of m`), so the command has to be run in a way that keeps those lines flowing. Loads the rules for picking flags, shaping loops, and staying inside the three-bar budget.
 ---
 

@@ -10,7 +10,7 @@ Wire claude-progressbar into the user's statusline. It runs on Linux, macOS and 
    ```json
    "statusLine": {
      "type": "command",
-     "command": "sh -c 'exec python3 -S \"$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/*/claude-progressbar/*/ | sort -V | tail -1)scripts/statusline.py\"'",
+     "command": "sh -c 'exec python3 -S \"$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/claude-progressbar/progressbar/*/ | sort -V | tail -1)scripts/statusline.py\"'",
      "refreshInterval": 1
    }
    ```
@@ -22,4 +22,4 @@ Wire claude-progressbar into the user's statusline. It runs on Linux, macOS and 
 4. The HUD shows at most three bars and folds the rest into `+N more running`. Add `--max-rows N` after `statusline.py\"` only when the user asks for a different budget.
 5. The bars are drawn in the `rise` style by default: braille cells that fill bottom-up over a dotted floor. Add `--style NAME` after `statusline.py\"` to pick another: `dots` (a lit dot matrix), `rail` (a fill riding a dotted rail), `graph` (a chart of the command's output over its run), `field` (plan-progress's twinkling dot field, two rows per command), `today` (eighth-blocks), `ruler` (eighth-blocks with quarter ticks), `digits` (the number first, then a thin line), `segments` (twenty countable squares), `countdown` (time left and the end time), or `history` (the run against its past durations). `field` takes its accent from a kitty colour file when given `--palette FILE`, such as a theme generator's output; otherwise it uses a default violet.
 6. Verify: `echo '{"session_id":"t"}' | <the command>` exits 0.
-7. Make sure the plugin is enabled (`claude plugin install claude-progressbar@<marketplace>`): its `claude-progressbar` skill is what tells Claude to keep long commands' progress lines flowing.
+7. Make sure the plugin is enabled (`claude plugin install progressbar@claude-progressbar`): its `long-commands` skill is what tells Claude to keep long commands' progress lines flowing.

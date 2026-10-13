@@ -8,7 +8,7 @@
   },
   "plugins": [
     {
-      "name": "claude-progressbar",
+      "name": "progressbar",
       "description": "Statusline progress bars for the Bash commands Claude Code runs",
       "version": "2.1.0",
       "source": "./",

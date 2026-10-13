@@ -18,16 +18,16 @@ While Claude runs a long command, Claude Code shows a spinner and a timer. claud
 
 ```
 /plugin marketplace add mvrozanti/claude-progressbar
-/plugin install claude-progressbar@claude-progressbar
-/claude-progressbar:setup
+/plugin install progressbar@claude-progressbar
+/progressbar:setup
 ```
 
-`/claude-progressbar:setup` points your `statusLine` at the plugin and keeps whatever you had there above the bars. To set it by hand, put this in `~/.claude/settings.json`:
+`/progressbar:setup` points your `statusLine` at the plugin and keeps whatever you had there above the bars. To set it by hand, put this in `~/.claude/settings.json`:
 
 ```json
 "statusLine": {
   "type": "command",
-  "command": "sh -c 'exec python3 -S \"$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/*/claude-progressbar/*/ | sort -V | tail -1)scripts/statusline.py\" --wrap claude-hud'",
+  "command": "sh -c 'exec python3 -S \"$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/claude-progressbar/progressbar/*/ | sort -V | tail -1)scripts/statusline.py\" --wrap claude-hud'",
   "refreshInterval": 1
 }
 ```
@@ -73,7 +73,7 @@ Every command Claude runs is a shell started by the `claude` process, with its o
 
 When a command finishes, its duration is appended to `~/.local/state/claude-progressbar/history.jsonl`, keyed by the command with leading `cd …`, variable assignments and wrappers such as `sudo`, `timeout` and `rtk` stripped. The estimate is the median of the last seven runs. A command never seen before borrows from commands that start the same way, such as `nix build`, but only when those runs agree within a factor of three. In a chain such as `setup && main`, the last command decides which commands it borrows from.
 
-The plugin also ships a skill. It tells Claude to keep progress visible on long commands: let output flow instead of piping it into `tail`, use flags such as `rsync --info=progress2`, and print `n/m` in its own loops.
+The plugin also ships a skill, `long-commands`. It tells Claude to keep progress visible on long commands: let output flow instead of piping it into `tail`, use flags such as `rsync --info=progress2`, and print `n/m` in its own loops.
 
 ## Cost
 

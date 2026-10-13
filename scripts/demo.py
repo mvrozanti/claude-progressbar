@@ -121,7 +121,7 @@ def main():
         play(lambda now: card(title, args.cols), 3.0, args.fps)
         for name, text in TOUR:
             play(lambda now, name=name, text=text: frame(name, sim(now), args.cols, args.rows, (name, text)), 2.6, args.fps)
-        ending = [("claude-progressbar", "b c12"), ("", ""), ("a Claude Code plugin · Linux · Python 3.9+", "dim"), ("", ""), ("github.com/mvrozanti/claude-progressbar", "b")]
+        ending = [("claude-progressbar", "b c12"), ("", ""), ("a Claude Code plugin · Linux · macOS · Windows · Python 3.9+", "dim"), ("", ""), ("github.com/mvrozanti/claude-progressbar", "b")]
         play(lambda now: card(ending, args.cols), 3.5, args.fps)
     finally:
         sys.stdout.write("\x1b[?25h\n")

@@ -225,7 +225,7 @@ class InstallCommand(unittest.TestCase):
         command = documented_command()
         with tempfile.TemporaryDirectory() as d:
             for version in ("2.9.0", "2.10.0", "10.0.0-rc1", "9.1.0"):
-                scripts = os.path.join(d, "plugins", "cache", "claude-progressbar", "claude-progressbar", version, "scripts")
+                scripts = os.path.join(d, "plugins", "cache", "claude-progressbar", "progressbar", version, "scripts")
                 os.makedirs(scripts)
                 with open(os.path.join(scripts, "statusline.py"), "w") as f:
                     f.write(STUB.format(version=version))

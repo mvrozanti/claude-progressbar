@@ -1,5 +1,5 @@
 {
-  "name": "claude-progressbar",
+  "name": "progressbar",
   "description": "Statusline progress bars for the Bash commands Claude Code runs: parsed from their output, estimated from past runs of the same command, or animated when neither is known.",
   "version": "2.1.0",
   "author": {
