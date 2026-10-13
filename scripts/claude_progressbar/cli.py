@@ -67,7 +67,16 @@ def options(argv):
     return wrap, max_rows, style, palette
 
 
+def runtime_fallback():
+    if hasattr(os, "getuid"):
+        return f"/tmp/claude-progressbar-{os.getuid()}"
+    return os.environ.get("TEMP") or os.environ.get("TMP") or os.path.expanduser("~")
+
+
 def main():
+    for stream in (sys.stdin, sys.stdout):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
     wrap, max_rows, style, palette_path = options(sys.argv[1:])
     palette = load_palette(palette_path) if STYLES[style].uses_palette else None
     raw = sys.stdin.read()
@@ -77,7 +86,7 @@ def main():
         data = {}
     session = str(data.get("session_id") or "default")
     slug = hashlib.sha1(session.encode()).hexdigest()[:16]
-    runtime = state_dir("XDG_RUNTIME_DIR", f"/tmp/claude-progressbar-{os.getuid()}")
+    runtime = state_dir("XDG_RUNTIME_DIR", runtime_fallback())
     cols = columns()
     lines = []
     command = hud_command(wrap)

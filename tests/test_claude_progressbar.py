@@ -354,13 +354,8 @@ class Goldens(unittest.TestCase):
 
 
 class Platform(unittest.TestCase):
-    def test_no_proc_means_no_rows(self):
-        real = procs.os.path.isdir
-        procs.os.path.isdir = lambda path: False if path == "/proc" else real(path)
-        try:
-            self.assertEqual(procs.running_tasks("any"), [])
-        finally:
-            procs.os.path.isdir = real
+    def test_an_unsupported_platform_means_no_rows(self):
+        self.assertEqual(procs.running_tasks("any", backend=None), [])
 
     def test_claude_hud_runs_only_when_asked(self):
         from claude_progressbar import hud

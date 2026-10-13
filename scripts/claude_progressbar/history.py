@@ -29,7 +29,7 @@ HISTORY_KEEP = 2000
 def load_history(path):
     exact, families = {}, {}
     try:
-        with open(path) as f:
+        with open(path, encoding="utf-8", errors="replace") as f:
             for line in f:
                 try:
                     entry = json.loads(line)
@@ -65,10 +65,10 @@ def estimate(task, exact, families):
 
 
 def append_history(path, entries):
-    with open(path, "a") as f:
+    with open(path, "a", encoding="utf-8") as f:
         f.write("".join(json.dumps(e) + "\n" for e in entries))
     if os.path.getsize(path) > HISTORY_MAX_BYTES:
-        with open(path) as f:
+        with open(path, encoding="utf-8", errors="replace") as f:
             kept = f.readlines()[-HISTORY_KEEP:]
         write_atomic(path, "".join(kept))
 

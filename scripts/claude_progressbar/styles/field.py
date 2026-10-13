@@ -59,7 +59,7 @@ def load_palette(path):
     if not path:
         return palette
     try:
-        with open(os.path.expanduser(path)) as f:
+        with open(os.path.expanduser(path), encoding="utf-8", errors="replace") as f:
             for line in f:
                 parts = line.split()
                 if len(parts) >= 2 and HEX.fullmatch(parts[1]):

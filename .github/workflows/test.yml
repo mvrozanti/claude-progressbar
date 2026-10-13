@@ -2,14 +2,24 @@ name: test
 
 on:
   push:
+    branches: [main]
+    tags: ["v*"]
   pull_request:
+  schedule:
+    - cron: "23 7 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   unittest:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v4
@@ -17,3 +27,53 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: python -m unittest discover -s tests -v
+
+  claude-code:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install Claude Code
+        if: runner.os != 'Windows'
+        run: |
+          curl -fsSL https://claude.ai/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Install Claude Code
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          irm https://claude.ai/install.ps1 | iex
+          "$env:USERPROFILE\.local\bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+      - run: claude --version
+      - name: Bars for the commands a real Claude Code runs, driven by a mock API
+        env:
+          CLAUDE_PROGRESSBAR_LIVE: "1"
+        timeout-minutes: 10
+        run: python -m unittest tests.test_live_claude -v
+
+  notify:
+    needs: [unittest, claude-code]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push a failure notification
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          [ -n "$NTFY_TOPIC" ] || { echo "NTFY_TOPIC unset; no push notification"; exit 0; }
+          curl -fsS -H "Title: claude-progressbar tests FAILED on ${{ github.ref_name }}" \
+               -H "Priority: high" -H "Tags: rotating_light" \
+               -d "${{ github.workflow }} failed for ${{ github.sha }} (${{ github.event_name }})
+          unittest=${{ needs.unittest.result }} claude-code=${{ needs.claude-code.result }}
+          ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+               "$NTFY_TOPIC"
+      - name: Say what failed in the log either way
+        run: |
+          echo "unittest=${{ needs.unittest.result }} claude-code=${{ needs.claude-code.result }}"
+          echo "run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

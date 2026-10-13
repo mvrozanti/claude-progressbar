@@ -40,6 +40,14 @@ def hud_command(wrap):
     return [node, entries[-1]] if entries and node else None
 
 
+def shell_argv(command):
+    if isinstance(command, str) and os.name == "nt":
+        sh = shutil.which("sh") or shutil.which("bash")
+        if sh:
+            return [sh, "-c", command]
+    return command
+
+
 def hud_output(command, raw, data, cols, cache_path):
     try:
         st = os.stat(data.get("transcript_path") or "")
@@ -53,12 +61,15 @@ def hud_output(command, raw, data, cols, cache_path):
         return cached.get("out", "")
     import subprocess
     try:
+        argv = shell_argv(command)
         result = subprocess.run(
-            command,
-            shell=isinstance(command, str),
+            argv,
+            shell=isinstance(argv, str),
             input=raw,
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             timeout=HUD_TIMEOUT,
             env={**os.environ, "COLUMNS": str(cols)},
         )
