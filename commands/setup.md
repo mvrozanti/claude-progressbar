@@ -2,7 +2,7 @@
 description: Point the Claude Code statusline at claude-progressbar
 ---
 
-Wire claude-progressbar into the user's statusline. It needs Linux (`/proc`) and `python3` on `PATH`; it has no other dependencies.
+Wire claude-progressbar into the user's statusline. It runs on Linux, macOS and Windows and needs Python 3.9 or newer; it has no other dependencies.
 
 1. Read `~/.claude/settings.json` and change only the `statusLine` key.
 2. Set it to:
@@ -14,6 +14,8 @@ Wire claude-progressbar into the user's statusline. It needs Linux (`/proc`) and
      "refreshInterval": 1
    }
    ```
+
+   On Windows, check which of `python3 --version` and `python --version` prints a real Python 3.9+ version (the `python3` alias may only open the Microsoft Store) and write that name in place of `python3`. Claude Code runs the command through Git Bash there, so nothing else changes.
 
    `refreshInterval` is what keeps the bars moving while a command runs, because no other statusline trigger fires during a long tool call. Each refresh costs about 20 ms of CPU, once a second, in every open session.
 3. Keep whatever the previous `statusLine.command` showed by adding a `--wrap` after `statusline.py\"`: `--wrap claude-hud` when it was claude-hud (claude-progressbar then finds and runs the installed claude-hud), otherwise `--wrap '<previous command>'`. With no `--wrap`, only the bars are shown.

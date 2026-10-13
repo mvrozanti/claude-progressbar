@@ -46,7 +46,8 @@ def events(blocks, stop_reason):
 class MockAnthropic:
     def __init__(self, script, final="done"):
         self.script = list(script)
-        self.final = final
+        self.finals = [final] if isinstance(final, str) else list(final)
+        self.ended = 0
         self.results = []
         self.requests = 0
         self.lock = threading.Lock()
@@ -112,7 +113,9 @@ class MockAnthropic:
                 said = step.pop("say", None)
                 use = {"type": "tool_use", "id": f"toolu_mock_{len(seen)}", "name": "Bash", "input": step}
                 return ([{"type": "text", "text": said}] if said else []) + [use], "tool_use"
-            return [{"type": "text", "text": self.final}], "end_turn"
+            said = self.finals[min(self.ended, len(self.finals) - 1)]
+            self.ended += 1
+            return [{"type": "text", "text": said}], "end_turn"
 
     def __enter__(self):
         threading.Thread(target=self.server.serve_forever, daemon=True).start()
