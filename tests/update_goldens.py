@@ -33,11 +33,14 @@ def cases(inputs):
 
 
 def computed():
-    os.environ["TZ"] = "UTC"
-    time.tzset()
     with open(os.path.join(HERE, "golden_inputs.json")) as f:
         inputs = json.load(f)
-    return {key: digest(draw()) for key, draw in cases(inputs)}
+    local = time.localtime
+    time.localtime = time.gmtime
+    try:
+        return {key: digest(draw()) for key, draw in cases(inputs)}
+    finally:
+        time.localtime = local
 
 
 if __name__ == "__main__":

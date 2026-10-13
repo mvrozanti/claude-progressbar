@@ -48,7 +48,7 @@ class LiveClaude(unittest.TestCase):
                 "XDG_RUNTIME_DIR": home,
             })
             run = subprocess.run(
-                [claude, "-p", "go", "--allowedTools", "Bash", "--model", "claude-sonnet-5"],
+                [claude, "-p", "go", "--permission-mode", "bypassPermissions", "--model", "claude-sonnet-5"],
                 env=env, cwd=home, stdin=subprocess.DEVNULL, capture_output=True,
                 text=True, encoding="utf-8", errors="replace", timeout=240,
             )
