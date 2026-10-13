@@ -1,6 +1,11 @@
 # claude-progressbar
 
-[![test](https://github.com/mvrozanti/claude-progressbar/actions/workflows/test.yml/badge.svg)](https://github.com/mvrozanti/claude-progressbar/actions/workflows/test.yml)
+[![Linux](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmvrozanti%2Fclaude-progressbar%2Fbadges%2Flinux.json)](https://github.com/mvrozanti/claude-progressbar/actions/workflows/test.yml?query=branch%3Amain)
+[![macOS](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmvrozanti%2Fclaude-progressbar%2Fbadges%2Fmacos.json)](https://github.com/mvrozanti/claude-progressbar/actions/workflows/test.yml?query=branch%3Amain)
+[![Windows](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmvrozanti%2Fclaude-progressbar%2Fbadges%2Fwindows.json)](https://github.com/mvrozanti/claude-progressbar/actions/workflows/test.yml?query=branch%3Amain)
+[![Claude Code](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmvrozanti%2Fclaude-progressbar%2Fbadges%2Fclaude-code.json)](https://github.com/mvrozanti/claude-progressbar/actions/workflows/test.yml?query=branch%3Amain)
+[![release](https://img.shields.io/github/v/release/mvrozanti/claude-progressbar)](https://github.com/mvrozanti/claude-progressbar/releases/latest)
+[![license](https://img.shields.io/github/license/mvrozanti/claude-progressbar)](LICENSE)
 
 Progress bars for the Bash commands Claude Code runs, drawn in its statusline. Linux, macOS and Windows.
 
@@ -95,6 +100,8 @@ python3 scripts/demo.py --tour
 vhs media/tour.tape
 vhs media/live.tape
 ```
+
+The badges at the top are written by CI on every run of `main`, weekly included. A platform badge is green only when the unit tests pass on every Python from 3.9 to 3.14 and the live Claude Code check passes on that OS. The Claude Code badge shows the version that run installed and the day it passed.
 
 The live test starts a mock Anthropic API, points a real `claude -p` at it, and has the mock ask for a background command and then a command that runs the statusline from inside Claude Code. It needs `claude` on `PATH` and no account. `media/live.tape` drives the interactive UI the same way and also needs `pytest`, `rsync` and `make`.
 
