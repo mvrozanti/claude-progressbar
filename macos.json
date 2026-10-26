@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "label": "macOS",
+  "message": "Python 3.9 \u2013 3.14",
+  "color": "brightgreen",
+  "cacheSeconds": 600,
+  "logoColor": "white",
+  "namedLogo": "apple"
+}

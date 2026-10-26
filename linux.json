@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "label": "Linux",
+  "message": "failing: Python 3.13",
+  "color": "red",
+  "cacheSeconds": 600,
+  "logoColor": "white",
+  "namedLogo": "linux"
+}
