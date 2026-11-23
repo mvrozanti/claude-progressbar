@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "label": "Windows",
+  "message": "Python 3.9 \u2013 3.14",
+  "color": "brightgreen",
+  "cacheSeconds": 600,
+  "logoSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"white\"><path d=\"M0 3.4 9.8 2v9.5H0zM11 1.8 24 0v11.5H11zM0 12.5h9.8V22L0 20.6zM11 12.5h13V24l-13-1.8z\"/></svg>"
+}
